@@ -16,7 +16,7 @@ def countValid(passwords: list) -> int:
         dash, space, colon = p.index('-'), p.index(' '), p.index(':')
         lo, hi = int(p[:dash]), int(p[dash + 1: space])
         char, pwd = p[space + 1: colon], p[colon + 2:]
-        
+
         count1 += int(isValid1(lo, hi, char, pwd))
         count2 += int(isValid2(lo, hi, char, pwd))
     return (count1, count2)
