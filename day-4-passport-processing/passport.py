@@ -16,11 +16,11 @@ def isValid(passport: dict, strict: bool = False) -> bool:
 
 def checkValues(key: str, val: str) -> bool:
     if key == 'byr':
-        return len(val) == 4 and 1920 <= int(val) <= 2002
+        return 1920 <= int(val) <= 2002
     if key == 'iyr':
-        return len(val) == 4 and 2010 <= int(val) <= 2020
+        return 2010 <= int(val) <= 2020
     if key == 'eyr':
-        return len(val) == 4 and 2020 <= int(val) <= 2030
+        return 2020 <= int(val) <= 2030
     if key == 'hgt':
         try:
             num, unit = int(val[:-2]), val[-2:]
