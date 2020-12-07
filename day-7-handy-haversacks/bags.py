@@ -12,26 +12,26 @@ def parseBags(lines: list) -> dict:
                 each = each.strip()
                 first_space = each.index(' ')
                 last_space = each.index(' bag')
-                col = each[first_space + 1:last_space]
+                colour = each[first_space + 1:last_space]
                 num = int(each[:first_space])
-                inner[col] = num
+                inner[colour] = num
         bags[outer] = inner
     return bags
 
 
 def countShiny(bags: dict) -> int:
-    return sum([int(containsShiny(col, bags)) for col in bags])
+    return sum([int(containsShiny(bags, colour)) for colour in bags])
 
 
-def containsShiny(col: str, bags: dict) -> bool:
-    for each in bags[col]:
-        if each == 'shiny gold' or containsShiny(each, bags):
+def containsShiny(bags: dict, colour: str) -> bool:
+    for each in bags[colour]:
+        if each == 'shiny gold' or containsShiny(bags, each):
             return True
     return False
 
 
-def countInside(bag: dict) -> int:
-    return sum([v + v * countInside(bags[k]) for k, v in bag.items()])
+def countInside(bags: dict, colour: str) -> int:
+    return sum([v + v * countInside(bags, k) for k, v in bags[colour].items()])
 
 
 if __name__ == '__main__':
@@ -39,4 +39,4 @@ if __name__ == '__main__':
         bags = parseBags(f.readlines())
 
     print(f"Part 1 = {countShiny(bags)}")
-    print(f"Part 2 = {countInside(bags['shiny gold'])}")
+    print(f"Part 2 = {countInside(bags, 'shiny gold')}")
