@@ -30,22 +30,13 @@ def containsShiny(col: str, bags: dict) -> bool:
     return False
 
 
-def countBagsInShiny(bags: dict) -> int:
-
-    def getSum(bag: dict) -> int:
-        # go deep into a bag and count inner bags
-        return sum([v + v * count(bags[k]) for k, v in bag.items()])
-
-    def count(bag: dict) -> int:
-        # count is 0 if no more bags are found, else continue recursion
-        return 0 if not bag else getSum(bag)
-
-    return getSum(bags['shiny gold'])
+def countInside(bag: dict) -> int:
+    return sum([v + v * countInside(bags[k]) for k, v in bag.items()])
 
 
 if __name__ == '__main__':
     with open('day7.in') as f:
         bags = parseBags(f.readlines())
 
-    print(f'Part 1 = {countShiny(bags)}')
-    print(f'Part 2 = {countBagsInShiny(bags)}')
+    print(f"Part 1 = {countShiny(bags)}")
+    print(f"Part 2 = {countInside(bags['shiny gold'])}")
