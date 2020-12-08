@@ -23,7 +23,7 @@ def countValid(passwords: list) -> int:
 
 
 if __name__ == '__main__':
-    with open('input.txt') as f:
+    with open('day2.in') as f:
         passwords = [each.strip() for each in f.readlines()]
 
     print(countValid(passwords))

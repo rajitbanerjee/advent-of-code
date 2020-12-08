@@ -59,7 +59,7 @@ def findDist(wire: list, point: (int, int)) -> int:
 
 
 if __name__ == '__main__':
-    with open('day03.in') as f:
+    with open('day3.in') as f:
         wires = [line.strip().split(',') for line in f.readlines()]
 
     print(f"Part 1 = {minDist(wires)}")

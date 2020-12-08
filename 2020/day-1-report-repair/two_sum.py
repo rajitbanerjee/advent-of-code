@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-with open('input.txt') as f:
+with open('day1.in') as f:
     nums = [int(n) for n in f.readlines()]
 
 seen = {}

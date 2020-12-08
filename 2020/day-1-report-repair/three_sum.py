@@ -8,6 +8,6 @@ def threeSum(nums: list) -> str:
                 return (f'{n} * {m} * {p} = {n*m*p}')
 
 
-with open('input.txt') as f:
+with open('day1.in') as f:
     nums = [int(n) for n in f.readlines()]
 print(threeSum(nums))

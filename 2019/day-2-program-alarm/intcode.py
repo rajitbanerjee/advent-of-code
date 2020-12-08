@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 def readInput() -> list:
-    with open('day02.in') as f:
+    with open('day2.in') as f:
         return list(map(int, f.read().strip().split(',')))
 
 

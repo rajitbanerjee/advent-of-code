@@ -13,8 +13,7 @@ def count(mat: list, right: int = 3, down: int = 1) -> int:
 
 
 if __name__ == '__main__':
-    filename = 'input.txt'
-    with open(filename) as f:
+    with open('day3.in') as f:
         mat = [list(row.strip()) for row in f.readlines()]
 
     # part 1
