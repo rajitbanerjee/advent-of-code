@@ -25,6 +25,7 @@ def getInput(year, day):
         for d in Path(f'./{year}/').iterdir():
             if str(day) in str(d)[4:]:
                 folder = d
+                break
         outpath = folder/Path(f'day{day}.in')
 
         if not outpath.exists():
