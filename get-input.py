@@ -40,7 +40,7 @@ def getInput(year, day):
         else:
             print(f'Input file already exists: {outpath}')
 
-    except Exception as e:
+    except:
         print(f'{year}, day {day}: Error! Check if cookie is valid, input is available, and problem folder has been created.')
 
 
