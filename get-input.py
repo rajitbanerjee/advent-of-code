@@ -3,7 +3,7 @@
 Usage
 -----
 
-1. Make directory containing day number, e.g. `./2020/day-<day>-<problem-name>`
+1. Make directory containing day number, e.g. `./2020/day<day>-<problem-name>`
 2. Run `$ ./get-input 2020` to download all input so far for given year.
 3. Alternatively, run script without arguments `$ ./get-input` to download the current year's input by default.
 
