@@ -5,25 +5,27 @@ from copy import deepcopy
 
 def simulate(layout: list, tolerance: int = 4,
              only_first: bool = False) -> int:
-    while True:
-        new_layout = update(layout, tolerance, only_first)
-        if isIdentical(new_layout, layout):
-            return countOccupied(new_layout)
-        layout[:] = new_layout
-    return -1
+    identical = False
+    while not identical:
+        layout, identical = update(layout, tolerance, only_first)
+    return countOccupied(layout)
 
 
-def update(layout: list, tolerance: int, only_first: bool = False) -> list:
-    new_layout = deepcopy(layout)
-    for i in range(len(layout)):
-        for j in range(len(layout[0])):
+def update(layout: list, tolerance: int,
+           only_first: bool = False) -> (list, bool):
+    rows, cols = len(layout), len(layout[0])
+    new_layout, identical = deepcopy(layout), True
+
+    for i in range(rows):
+        for j in range(cols):
             if layout[i][j] == 'L' and \
                     countOccupiedAround(i, j, layout, only_first) == 0:
-                new_layout[i][j] = '#'
+                new_layout[i][j], identical = '#', False
             elif layout[i][j] == '#' and \
                     countOccupiedAround(i, j, layout, only_first) >= tolerance:
-                new_layout[i][j] = 'L'
-    return new_layout
+                new_layout[i][j], identical = 'L', False
+
+    return (new_layout, identical)
 
 
 def countOccupiedAround(i: int, j: int, layout: list,
@@ -44,7 +46,7 @@ def getFirstEachDir(i: int, j: int, layout: list) -> list:
                   (-1, -1), (-1, 1), (1, -1), (1, 1)]
 
     for dx, dy in directions:
-        x, y = i+dx, j+dy
+        x, y = i + dx, j + dy
         # keep moving in current direction until seat is found
         while isValid(x, y, layout) and layout[x][y] == '.':
             x += dx
@@ -65,13 +67,8 @@ def isOccupied(i: int, j: int, layout: list) -> bool:
 
 def countOccupied(layout: list) -> int:
     rows, cols = len(layout), len(layout[0])
-    around = [(i, j) for j in range(cols) for i in range(rows)]
-    return sum([isOccupied(i, j, layout) for i, j in around])
-
-
-def isIdentical(a: list, b: list) -> bool:
-    rows, cols = len(a), len(a[0])
-    return all([a[i][j] == b[i][j] for j in range(cols) for i in range(rows)])
+    return sum([isOccupied(i, j, layout)
+                for j in range(cols) for i in range(rows)])
 
 
 if __name__ == '__main__':
