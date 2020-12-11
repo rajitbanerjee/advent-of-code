@@ -10,6 +10,7 @@ def simulate(layout: list, tolerance: int = 4,
         if isIdentical(new_layout, layout):
             return countOccupied(new_layout)
         layout[:] = new_layout
+    return -1
 
 
 def update(layout: list, tolerance: int, only_first: bool = False) -> list:
@@ -65,15 +66,12 @@ def isOccupied(i: int, j: int, layout: list) -> bool:
 def countOccupied(layout: list) -> int:
     rows, cols = len(layout), len(layout[0])
     around = [(i, j) for j in range(cols) for i in range(rows)]
-    return sum([isOccupied(a, b, layout) for a, b in around])
+    return sum([isOccupied(i, j, layout) for i, j in around])
 
 
 def isIdentical(a: list, b: list) -> bool:
-    for i in range(len(a)):
-        for j in range(len(a[0])):
-            if a[i][j] != b[i][j]:
-                return False
-    return True
+    rows, cols = len(a), len(a[0])
+    return all([a[i][j] == b[i][j] for j in range(cols) for i in range(rows)])
 
 
 if __name__ == '__main__':
