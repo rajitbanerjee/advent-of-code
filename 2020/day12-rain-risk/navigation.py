@@ -46,7 +46,7 @@ def follow_waypoint(instructions: list, waypoint: (int, int)) -> (int, int):
         elif direction == 'F':
             x, y = move_ship_to_waypoint(x, y, w, units)
         else:
-            w *= rotate_waypoint(direction, units)
+            w = rotate_waypoint(w, direction, units)
 
     return (x, y)
 
@@ -60,11 +60,11 @@ def move_ship_to_waypoint(x: int, y: int,
     return (int(x + w.real * value), int(y + w.imag * value))
 
 
-def rotate_waypoint(direction: str, degrees: int) -> complex:
+def rotate_waypoint(w: complex, direction: str, degrees: int) -> complex:
     # complex numbers are rotated counter-clockwise by default
     sign = -1 if direction == 'R' else +1
     rad = radians(sign * degrees)
-    return complex(int(cos(rad)), int(sin(rad)))
+    return w * complex(int(cos(rad)), int(sin(rad)))
 
 
 if __name__ == '__main__':
