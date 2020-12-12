@@ -16,24 +16,16 @@ def follow(instructions: list) -> (int, int):
     compass = 'NESW'
     x, y, d = 0, 0, compass.index('E')
 
-    for i in instructions:
-        direction, units = parseInstruction(i)
+    for direction, units in instructions:
         if direction in compass:
-            # move in given direction
             x, y = move(direction, x, y, units)
         elif direction == 'F':
-            # move forward in current direction
             x, y = move(compass[d], x, y, units)
         else:
-            # change direction
             sign = +1 if direction == 'R' else -1
             d = (d + sign * units // 90) % 4
 
     return (x, y)
-
-
-def parseInstruction(i: str) -> (str, int):
-    return (i[0], int(i[1:]))
 
 
 def move(direction: str, x: int, y: int, units: int) -> (int, int):
@@ -48,31 +40,36 @@ def move(direction: str, x: int, y: int, units: int) -> (int, int):
 def follow_waypoint(instructions: list, waypoint: (int, int)) -> (int, int):
     x, y, w = 0, 0, complex(*waypoint)
 
-    for i in instructions:
-        direction, units = parseInstruction(i)
+    for direction, units in instructions:
         if direction in 'NESW':
-            # move the waypoint itself
-            w = complex(*move(direction, w.real, w.imag, units))
+            w = move_waypoint(w, direction, units)
         elif direction == 'F':
-            # move ship to the waypoint
-            x, y = move_to_waypoint(x, y, w, units)
+            x, y = move_ship_to_waypoint(x, y, w, units)
         else:
-            # complex numbers are rotated counter-clockwise by default
-            sign = -1 if direction == 'R' else +1
-            # rotate waypoint
-            rad = radians(sign * units)
-            w *= complex(int(cos(rad)), int(sin(rad)))
+            w *= rotate_waypoint(direction, units)
 
     return (x, y)
 
 
-def move_to_waypoint(x: int, y: int, w: complex, value: int) -> (int, int):
+def move_waypoint(w: complex, direction: str, units: int) -> complex:
+    return complex(*move(direction, w.real, w.imag, units))
+
+
+def move_ship_to_waypoint(x: int, y: int,
+                          w: complex, value: int) -> (int, int):
     return (int(x + w.real * value), int(y + w.imag * value))
+
+
+def rotate_waypoint(direction: str, degrees: int) -> complex:
+    # complex numbers are rotated counter-clockwise by default
+    sign = -1 if direction == 'R' else +1
+    rad = radians(sign * degrees)
+    return complex(int(cos(rad)), int(sin(rad)))
 
 
 if __name__ == '__main__':
     with open('day12.in') as f:
-        instructions = [i.strip() for i in f.readlines()]
+        instructions = [(i[0], int(i[1:])) for i in f.readlines()]
 
     print(f"Part 1 = {get_manhattan_from_start(instructions)}")
     print(f"Part 2 = {get_manhattan_from_start(instructions, waypoint=(10, 1))}")
