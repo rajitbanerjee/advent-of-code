@@ -8,7 +8,7 @@ def get_manhattan_from_start(instructions: list,
     if not waypoint:
         x, y = follow(instructions)
     else:
-        x, y = follow_waypoint(instructions, complex(*waypoint))
+        x, y = follow_waypoint(instructions, waypoint)
     return abs(x) + abs(y)
 
 
@@ -45,8 +45,9 @@ def move(direction: str, x: int, y: int, units: int) -> (int, int):
     return (x, y)
 
 
-def follow_waypoint(instructions: list, w: complex) -> (int, int):
-    x, y = 0, 0
+def follow_waypoint(instructions: list, waypoint: (int, int)) -> (int, int):
+    x, y, w = 0, 0, complex(*waypoint)
+
     for i in instructions:
         direction, units = parseInstruction(i)
         if direction in 'NESW':
@@ -61,6 +62,7 @@ def follow_waypoint(instructions: list, w: complex) -> (int, int):
             # rotate waypoint
             rad = radians(sign * units)
             w *= complex(int(cos(rad)), int(sin(rad)))
+
     return (x, y)
 
 
