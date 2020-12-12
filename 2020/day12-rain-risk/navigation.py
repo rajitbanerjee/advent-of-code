@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import cmath
 from math import sin, cos, radians
 
 
@@ -9,8 +8,7 @@ def get_manhattan_from_start(instructions: list,
     if not waypoint:
         x, y = follow(instructions)
     else:
-        wx, wy = waypoint
-        x, y = follow_waypoint(instructions, complex(wx, wy))
+        x, y = follow_waypoint(instructions, complex(*waypoint))
     return abs(x) + abs(y)
 
 
@@ -19,42 +17,48 @@ def follow(instructions: list) -> (int, int):
     x, y, d = 0, 0, compass.index('E')
 
     for i in instructions:
-        direction, units = i[0], int(i[1:])
+        direction, units = parseInstruction(i)
         if direction in compass:
+            # move in given direction
             x, y = move(direction, x, y, units)
         elif direction == 'F':
+            # move forward in current direction
             x, y = move(compass[d], x, y, units)
         else:
+            # change direction
             sign = +1 if direction == 'R' else -1
             d = (d + sign * units // 90) % 4
 
     return (x, y)
 
 
+def parseInstruction(i: str) -> (str, int):
+    return(i[0], int(i[1:]))
+
+
 def move(direction: str, x: int, y: int, units: int) -> (int, int):
-    if direction == 'N':
-        y += units
-    elif direction == 'E':
-        x += units
-    elif direction == 'S':
-        y -= units
-    elif direction == 'W':
-        x -= units
+    sign = +1 if direction in 'NE' else -1
+    if direction in 'WE':
+        x += sign * units
+    else:
+        y += sign * units
     return (x, y)
 
 
 def follow_waypoint(instructions: list, w: complex) -> (int, int):
     x, y = 0, 0
     for i in instructions:
-        direction, units = i[0], int(i[1:])
+        direction, units = parseInstruction(i)
         if direction in 'NESW':
-            wx, wy = move(direction, w.real, w.imag, units)
-            w = complex(wx, wy)
+            # move the waypoint itself
+            w = complex(*move(direction, w.real, w.imag, units))
         elif direction == 'F':
+            # move ship to the waypoint
             x, y = move_to_waypoint(x, y, w, units)
         else:
             # complex numbers are rotated counter-clockwise by default
-            sign = +1 if direction == 'L' else -1
+            sign = -1 if direction == 'R' else +1
+            # rotate waypoint
             rad = radians(sign * units)
             w *= complex(int(cos(rad)), int(sin(rad)))
     return (x, y)
