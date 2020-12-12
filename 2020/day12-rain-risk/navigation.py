@@ -33,7 +33,7 @@ def follow(instructions: list) -> (int, int):
 
 
 def parseInstruction(i: str) -> (str, int):
-    return(i[0], int(i[1:]))
+    return (i[0], int(i[1:]))
 
 
 def move(direction: str, x: int, y: int, units: int) -> (int, int):
