@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 from math import sin, cos, radians
+from typing import List, Tuple
 
 
-def get_manhattan_from_start(instructions: list,
-                             waypoint: (int, int) = None) -> int:
+def get_manhattan_from_start(instructions: List[Tuple[str, int]],
+                             waypoint: Tuple[int, int] = None) -> int:
     if not waypoint:
         x, y = follow(instructions)
     else:
@@ -12,7 +13,7 @@ def get_manhattan_from_start(instructions: list,
     return abs(x) + abs(y)
 
 
-def follow(instructions: list) -> (int, int):
+def follow(instructions: List[Tuple[str, int]]) -> Tuple[int, int]:
     compass = 'NESW'
     x, y, d = 0, 0, compass.index('E')
 
@@ -28,7 +29,7 @@ def follow(instructions: list) -> (int, int):
     return (x, y)
 
 
-def move(direction: str, x: int, y: int, units: int) -> (int, int):
+def move(direction: str, x: int, y: int, units: int) -> Tuple[int, int]:
     sign = +1 if direction in 'NE' else -1
     if direction in 'WE':
         x += sign * units
@@ -37,7 +38,8 @@ def move(direction: str, x: int, y: int, units: int) -> (int, int):
     return (x, y)
 
 
-def follow_waypoint(instructions: list, waypoint: (int, int)) -> (int, int):
+def follow_waypoint(instructions: List[Tuple[str, int]],
+                    waypoint: Tuple[int, int]) -> Tuple[int, int]:
     x, y, w = 0, 0, complex(*waypoint)
 
     for direction, units in instructions:
@@ -52,11 +54,11 @@ def follow_waypoint(instructions: list, waypoint: (int, int)) -> (int, int):
 
 
 def move_waypoint(w: complex, direction: str, units: int) -> complex:
-    return complex(*move(direction, w.real, w.imag, units))
+    return complex(*move(direction, int(w.real), int(w.imag), units))
 
 
 def move_ship_to_waypoint(x: int, y: int,
-                          w: complex, value: int) -> (int, int):
+                          w: complex, value: int) -> Tuple[int, int]:
     return (int(x + w.real * value), int(y + w.imag * value))
 
 
