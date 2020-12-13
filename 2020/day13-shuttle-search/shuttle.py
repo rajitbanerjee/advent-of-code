@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-from math import ceil
-from numpy import prod
+from math import ceil, prod
 from typing import List
 
 
@@ -22,22 +21,12 @@ def chineseRemainder(n: List[int], a: List[int]) -> int:
     # https://en.wikipedia.org/wiki/Chinese_remainder_theorem#Existence_(direct_construction)
     # x congruent to a_i (mod n_i) for all i
     # => x congruent to y (mod N) for solution y, and N = product of all n_i
-    x = 0
-    N = prod(n)
+    x, N = 0.0, prod(n)
     for i in range(len(n)):
         N_i = N/n[i]
-        M_i = modInverse(int(N_i), n[i])
+        M_i = pow(int(N_i), -1, n[i])
         x += a[i] * M_i * N_i
     return int(x % N)
-
-
-def modInverse(a: int, m: int) -> int:
-    a = a % m
-    # brute force: modular multiplicative inverse
-    for x in range(1, m):
-        if (a * x) % m == 1:
-            return x
-    return 1
 
 
 if __name__ == '__main__':
