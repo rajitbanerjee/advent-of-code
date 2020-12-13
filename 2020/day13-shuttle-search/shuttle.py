@@ -15,10 +15,10 @@ def getTotalWaiting(first_timestamp: int, bus_ids: List[int]) -> int:
 def getEarliestTimestamp(first_timestamp: int, bus_ids: List[int]) -> int:
     divisors = [bus for bus in bus_ids if bus != 0]
     remainders = [bus - i for i, bus in enumerate(bus_ids) if bus != 0]
-    return chinese_remainder(divisors, remainders)
+    return chineseRemainder(divisors, remainders)
 
 
-def chinese_remainder(n: List[int], a: List[int]) -> int:
+def chineseRemainder(n: List[int], a: List[int]) -> int:
     # https://en.wikipedia.org/wiki/Chinese_remainder_theorem#Existence_(direct_construction)
     # x congruent to a_i (mod n_i) for all i
     # => x congruent to y (mod N) for solution y, and N = product of all n_i
@@ -26,12 +26,12 @@ def chinese_remainder(n: List[int], a: List[int]) -> int:
     N = prod(n)
     for i in range(len(n)):
         N_i = N/n[i]
-        M_i = mod_inverse(int(N_i), n[i])
+        M_i = modInverse(int(N_i), n[i])
         x += a[i] * M_i * N_i
     return int(x % N)
 
 
-def mod_inverse(a: int, m: int) -> int:
+def modInverse(a: int, m: int) -> int:
     a = a % m
     # brute force: modular multiplicative inverse
     for x in range(1, m):
