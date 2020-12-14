@@ -21,10 +21,10 @@ def chineseRemainder(n: List[int], a: List[int]) -> int:
     # https://en.wikipedia.org/wiki/Chinese_remainder_theorem#Existence_(direct_construction)
     # x congruent to a_i (mod n_i) for all i
     # => x congruent to y (mod N) for solution y, and N = product of all n_i
-    x, N = 0.0, prod(n)
+    x, N = 0, prod(n)
     for i in range(len(n)):
-        N_i = N/n[i]
-        M_i = pow(int(N_i), -1, n[i])
+        N_i = N//n[i]
+        M_i = pow(N_i, -1, n[i])
         x += a[i] * M_i * N_i
     return int(x % N)
 
