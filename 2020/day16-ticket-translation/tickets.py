@@ -58,7 +58,7 @@ def getFieldProd(notes: defaultdict, keyword: str) -> int:
     field_types = [''] * len(notes['your ticket'][0])
 
     # get a list of field type options for every position
-    possible_fields = sorted([(i, getPossibleField(field_values, notes))
+    possible_fields = sorted([(i, getPossibleFields(field_values, notes))
                               for i, field_values in enumerate(field_groups)],
                              key=lambda x: len(x[1]))
 
@@ -76,8 +76,8 @@ def getFieldProd(notes: defaultdict, keyword: str) -> int:
     return prod([notes['your ticket'][0][i] for i in keyword_indices])
 
 
-def getPossibleField(field_values: List[int],
-                     notes: defaultdict) -> List[str]:
+def getPossibleFields(field_values: List[int],
+                      notes: defaultdict) -> List[str]:
     checkFields = [field for field in notes
                    if field not in ['your ticket', 'nearby tickets']]
     possible = [field for field in checkFields
