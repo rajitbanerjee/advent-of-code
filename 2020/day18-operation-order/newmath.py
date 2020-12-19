@@ -20,7 +20,7 @@ def evaluate(expression: str, add_before_multiply: bool) -> int:
     # change all integers to custom integers which use overriden operators
     expression = re.sub(r'(\d+)', r'CustomInteger(\1)', expression)
 
-    # part 1: change all + with / signs (operators overriden by CustomInteger)
+    # part 1: change all + to / (operators overriden by CustomInteger)
     expression = re.sub('[+]', '/', expression)
 
     # part 2: change all * to - (operators overriden by CustomInteger)
