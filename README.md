@@ -1,6 +1,4 @@
-# [Advent of Code](https://adventofcode.com)
-
-It's exam season, so I don't know if I'll be able to keep up!  
+# [Advent of Code](https://adventofcode.com) 
 
 _Note to self_:
 
