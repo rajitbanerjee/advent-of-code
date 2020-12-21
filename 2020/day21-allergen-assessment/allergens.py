@@ -19,14 +19,15 @@ def getAllergenOptions(lines: List[str]) -> Tuple[dict, List[str]]:
         ingredients.extend(curr_ingredients)
         allergens = line[delim+10:-1].split(', ')
         for a in allergens:
-            opt = set(curr_ingredients)
-            options[a] = opt if (a not in options) else options[a] & opt
+            allergenic = set(curr_ingredients)
+            options[a] = allergenic if (a not in options) \
+                else options[a] & allergenic
     return (options, ingredients)
 
 
 def countNonAllergenic(options: dict, ingredients: List[str]) -> int:
-    return sum(all(a not in opt for opt in options.values())
-               for a in ingredients)
+    return sum(all(ing not in allergenic for allergenic in options.values())
+               for ing in ingredients)
 
 
 def getDangerousIngredients(options: dict) -> str:
