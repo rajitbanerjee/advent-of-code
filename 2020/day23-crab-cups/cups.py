@@ -20,15 +20,15 @@ def main() -> None:
 def playGame(labels: List[int], mistranslation: bool = False,
              num_moves: int = 100) -> str:
     first_cup, cups = arrangeCups(labels, mistranslation)
-    current_cup = makeMoves(first_cup, cups, num_moves).next
+    current_cup = makeMoves(first_cup, cups, num_moves)
 
     if not mistranslation:
         # combine all labels after and up to (wrap around) cup 1
-        labelling = []
+        labelling = ""
         while current_cup.label != 1:
-            labelling.append(str(current_cup.label))
+            labelling += str(current_cup.label)
             current_cup = current_cup.next
-        return ''.join(labelling)
+        return labelling
     else:
         # product of two cups after cup 1
         return current_cup.label * current_cup.next.label
@@ -56,7 +56,7 @@ def arrangeCups(labels: List[int],
     if last_cup:
         last_cup.next = first_cup
 
-    return first_cup, cups
+    return (first_cup, cups)
 
 
 def makeMoves(first_cup: ListNode, cups: dict, num_moves: int) -> ListNode:
@@ -82,7 +82,8 @@ def makeMoves(first_cup: ListNode, cups: dict, num_moves: int) -> ListNode:
 
         current_cup = current_cup.next
 
-    return cups[1]
+    # cup immediately clockwise of cup 1
+    return cups[1].next
 
 
 def pickThreeCups(node: ListNode) -> Tuple[ListNode, ...]:
