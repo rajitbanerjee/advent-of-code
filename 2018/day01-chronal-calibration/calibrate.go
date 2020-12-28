@@ -11,7 +11,6 @@ func main() {
 	freqChanges := parseInput("day1.in")
 	fmt.Printf("Part 1: %d\n", getSumFrequencies(freqChanges))
 	fmt.Printf("Part 2: %d\n", getFirstDuplicate(freqChanges))
-
 }
 
 func parseInput(filename string) []string {
