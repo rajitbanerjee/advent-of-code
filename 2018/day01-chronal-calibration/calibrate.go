@@ -1,10 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io/ioutil"
+	"log"
+	"os"
 	"strconv"
-	"strings"
 )
 
 func main() {
@@ -13,28 +14,38 @@ func main() {
 	fmt.Printf("Part 2: %d\n", getFirstDuplicate(freqChanges))
 }
 
-func parseInput(filename string) []string {
-	bytes, _ := ioutil.ReadFile(filename)
-	lines := strings.Split(string(bytes), "\n")
-	return lines[:len(lines)-1]
+func parseInput(filename string) []int {
+	file, err := os.Open(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	var nums []int
+	sc := bufio.NewScanner(file)
+	for sc.Scan() {
+		num, err := strconv.Atoi(sc.Text())
+		if err != nil {
+			log.Fatal(err)
+		}
+		nums = append(nums, num)
+	}
+	return nums
 }
 
-func getSumFrequencies(freqChanges []string) int {
+func getSumFrequencies(freqChanges []int) int {
 	sum := 0
 	for _, change := range freqChanges {
-		val, _ := strconv.Atoi(change)
-		sum += val
+		sum += change
 	}
 	return sum
 }
 
-func getFirstDuplicate(freqChanges []string) int {
+func getFirstDuplicate(freqChanges []int) int {
 	sum, seen := 0, make(map[int]bool)
 	for i := 0; ; i = (i + 1) % len(freqChanges) {
-		val, _ := strconv.Atoi(freqChanges[i])
-		sum += val
-
-		if _, duplicate := seen[sum]; duplicate {
+		sum += freqChanges[i]
+		if seen[sum] {
 			return sum
 		}
 		seen[sum] = true
