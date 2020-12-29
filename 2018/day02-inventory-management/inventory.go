@@ -45,6 +45,7 @@ func countCharFreq(id string) map[rune]int {
 	return charFreq
 }
 
+// Part 1
 func getChecksum(boxes []Box) int {
 	twos, threes := 0, 0
 	for _, box := range boxes {
@@ -68,6 +69,7 @@ func (box Box) countTwosAndThrees() (int, int) {
 	return hasExactlyTwo, hasExactlyThree
 }
 
+// Part 2
 func getCorrectBoxes(boxes []Box) (Box, Box) {
 	for i := 0; i < len(boxes)-1; i++ {
 		for j := i + 1; j < len(boxes); j++ {
