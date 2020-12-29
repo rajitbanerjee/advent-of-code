@@ -27,28 +27,24 @@ def fillFabric(claims: List[dict]) -> Tuple[int, int]:
     width, height = computeFabricDimensions(claims)
     fabric = [[0 for _ in range(width)] for _ in range(height)]
     countOverlapping = 0
-    ids, overlapping = set(), set()
+    ids = set()
 
     for claim in claims:
+        overlapping = False
         for i in range(claim["topInches"], getHeight(claim)):
             for j in range(claim["leftInches"], getWidth(claim)):
                 if not fabric[i][j]:
-                    # Fill available square inch with current claim ID
                     fabric[i][j] = claim["id"]
-                    if claim["id"] not in overlapping:
-                        ids.add(claim["id"])
                 else:
-                    # Current claim ID overlaps with existing claim ID
+                    overlapping = True
                     if fabric[i][j] != -1:  # X
                         countOverlapping += 1
+                        if fabric[i][j] in ids:
+                            ids.remove(fabric[i][j])
+                        fabric[i][j] = -1
 
-                    if fabric[i][j] in ids:
-                        ids.remove(fabric[i][j])
-                    if claim["id"] in ids:
-                        ids.remove(claim["id"])
-                    overlapping.add(fabric[i][j])
-                    overlapping.add(claim["id"])
-                    fabric[i][j] = -1
+        if not overlapping:
+            ids.add(claim["id"])
 
     # Only 1 non-overlapping ID is expected
     nonOverlappingID = next(iter(ids))

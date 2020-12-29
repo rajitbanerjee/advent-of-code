@@ -74,30 +74,25 @@ func (f *Fabric) computeDimensions(claims []Claim) {
 func (f *Fabric) fill(claims []Claim) (int, string) {
 	countOverlapping := 0
 	ids := make(map[string]bool)
-	overlapping := make(map[string]bool)
 
 	for _, claim := range claims {
+		overlapping := false
 		for i := claim.topInches; i < claim.topInches+claim.height; i++ {
 			for j := claim.leftInches; j < claim.leftInches+claim.width; j++ {
 				if f.layout[i][j] == "" {
-					// Fill available square inch with current claim ID
 					f.layout[i][j] = claim.id
-					if !overlapping[claim.id] {
-						ids[claim.id] = true
-					}
 				} else {
-					// Current claim ID overlaps with existing claim ID
+					overlapping = true
 					if f.layout[i][j] != "X" {
 						countOverlapping++
+						delete(ids, f.layout[i][j])
+						f.layout[i][j] = "X"
 					}
-
-					delete(ids, f.layout[i][j])
-					delete(ids, claim.id)
-					overlapping[f.layout[i][j]] = true
-					overlapping[claim.id] = true
-					f.layout[i][j] = "X"
 				}
 			}
+		}
+		if !overlapping {
+			ids[claim.id] = true
 		}
 	}
 
