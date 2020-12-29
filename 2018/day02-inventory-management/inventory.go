@@ -8,45 +8,56 @@ import (
 	"strings"
 )
 
+type Box struct {
+	id       string
+	charFreq map[rune]int
+}
+
 func main() {
 	boxes := parseInput("day2.in")
 	fmt.Printf("Part 1: %d\n", getChecksum(boxes))
-	fmt.Printf("Part 2: %s\n", getCommonCharacters(boxes))
+
+	box1, box2 := getCorrectBoxes(boxes)
+	fmt.Printf("Part 2: %s\n", box1.commonCharacters(box2))
 }
 
-func parseInput(filename string) []string {
+func parseInput(filename string) []Box {
 	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 
-	var lines []string
+	var boxes []Box
 	sc := bufio.NewScanner(file)
 	for sc.Scan() {
-		lines = append(lines, sc.Text())
+		line := sc.Text()
+		boxes = append(boxes, Box{id: line, charFreq: countCharFreq(line)})
 	}
-	return lines
+	return boxes
 }
 
-func getChecksum(boxes []string) int {
+func countCharFreq(id string) map[rune]int {
+	charFreq := make(map[rune]int)
+	for _, letter := range id {
+		charFreq[letter] += 1
+	}
+	return charFreq
+}
+
+func getChecksum(boxes []Box) int {
 	twos, threes := 0, 0
 	for _, box := range boxes {
-		hasExactlyTwo, hasExactlyThree := countTwosAndThrees(box)
+		hasExactlyTwo, hasExactlyThree := box.countTwosAndThrees()
 		twos += hasExactlyTwo
 		threes += hasExactlyThree
 	}
 	return twos * threes
 }
 
-func countTwosAndThrees(box string) (int, int) {
-	freq := make(map[rune]int)
-	for _, letter := range box {
-		freq[letter] += 1
-	}
-
+func (box Box) countTwosAndThrees() (int, int) {
 	var hasExactlyTwo, hasExactlyThree int
-	for _, count := range freq {
+	for _, count := range box.charFreq {
 		if count == 2 {
 			hasExactlyTwo = 1
 		}
@@ -57,22 +68,10 @@ func countTwosAndThrees(box string) (int, int) {
 	return hasExactlyTwo, hasExactlyThree
 }
 
-func getCommonCharacters(boxes []string) string {
-	box1, box2 := getCorrectBoxes(boxes)
-	var common strings.Builder
-	for i := 0; i < len(boxes[0]); i++ {
-		if box1[i] == box2[i] {
-			common.WriteString(string(box1[i]))
-		}
-	}
-	return common.String()
-
-}
-
-func getCorrectBoxes(boxes []string) (string, string) {
+func getCorrectBoxes(boxes []Box) (Box, Box) {
 	for i := 0; i < len(boxes)-1; i++ {
 		for j := i + 1; j < len(boxes); j++ {
-			if getDifference(boxes[i], boxes[j]) == 1 {
+			if boxes[i].difference(boxes[j]) == 1 {
 				return boxes[i], boxes[j]
 			}
 		}
@@ -80,12 +79,22 @@ func getCorrectBoxes(boxes []string) (string, string) {
 	panic("No two boxes with IDs differing by 1 character.")
 }
 
-func getDifference(box1, box2 string) int {
+func (box1 Box) difference(box2 Box) int {
 	var diff int
-	for i := 0; i < len(box1); i++ {
-		if box1[i] != box2[i] {
+	for i := 0; i < len(box1.id); i++ {
+		if box1.id[i] != box2.id[i] {
 			diff++
 		}
 	}
 	return diff
+}
+
+func (box1 Box) commonCharacters(box2 Box) string {
+	var common strings.Builder
+	for i := 0; i < len(box1.id); i++ {
+		if box1.id[i] == box2.id[i] {
+			common.WriteString(string(box1.id[i]))
+		}
+	}
+	return common.String()
 }
