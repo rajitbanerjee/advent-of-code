@@ -5,22 +5,17 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"regexp"
-	"strconv"
 )
 
 type Claim struct {
-	id         string
-	leftInches int
-	topInches  int
-	width      int
-	height     int
+	id                    string
+	leftInches, topInches int
+	width, height         int
 }
 
 type Fabric struct {
-	width  int
-	height int
-	layout [][]string
+	width, height int
+	layout        [][]string
 }
 
 func main() {
@@ -40,17 +35,11 @@ func parseInput(filename string) []Claim {
 	}
 
 	var claims []Claim
-	re := regexp.MustCompile(`#(\d+) @ (\d+),(\d+): (\d+)x(\d+)`)
 	sc := bufio.NewScanner(file)
 	for sc.Scan() {
-		groups := re.FindAllStringSubmatch(sc.Text(), 1)[0]
-
 		var claim Claim
-		claim.id = groups[1]
-		claim.leftInches, _ = strconv.Atoi(groups[2])
-		claim.topInches, _ = strconv.Atoi(groups[3])
-		claim.width, _ = strconv.Atoi(groups[4])
-		claim.height, _ = strconv.Atoi(groups[5])
+		fmt.Sscanf(sc.Text(), "#%s @ %d,%d: %dx%d", &claim.id, &claim.leftInches,
+			&claim.topInches, &claim.width, &claim.height)
 		claims = append(claims, claim)
 	}
 	return claims
