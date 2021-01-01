@@ -40,7 +40,7 @@ def applyFirstStrategy(records: dict) -> int:
 
 def getMaxMinute(records: dict, guardID: int) -> int:
     freq, numIntervals = getMinuteFreqs(records, guardID)
-    return max((k for k in freq), key=lambda x: freq[x]/numIntervals)
+    return max(freq, key=lambda x: freq[x]/numIntervals)
 
 
 def getMinuteFreqs(records: dict, guardID: int) -> Tuple[dict, int]:
@@ -61,7 +61,7 @@ def applySecondStrategy(records: dict) -> int:
 
 def getMaxMinuteFreq(records: dict, guardID: int) -> int:
     freq, _ = getMinuteFreqs(records, guardID)
-    return max((v for v in freq.values())) if freq else 0
+    return max(freq.values()) if freq else 0
 
 
 if __name__ == '__main__':
