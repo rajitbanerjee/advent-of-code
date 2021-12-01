@@ -12,16 +12,16 @@ def main() -> None:
 
 
 def countIncreases(nums: List[int]) -> int:
-    return sum(i > 0 and nums[i] > nums[i-1] for i in range(len(nums)))
+    return sum(i > 0 and nums[i] > nums[i - 1] for i in range(len(nums)))
 
 
 def countIncreasesWindow(nums: List[int], size: int = 3) -> int:
     left, right = 0, size - 1
-    total = sum(nums[i] for i in range(left, right+1))
+    total = sum(nums[i] for i in range(left, right + 1))
     window_totals = [total]
 
-    for idx in range(right+1, len(nums)):
-        total = total + nums[idx] - nums[idx - size]
+    for i in range(right + 1, len(nums)):
+        total = total + nums[i] - nums[i - size]
         window_totals.append(total)
 
     return countIncreases(window_totals)

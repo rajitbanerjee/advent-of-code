@@ -1,0 +1,23 @@
+{
+  "name": "advent-of-code",
+  "version": "1.0.0",
+  "description": "_Note to self_:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rajitbanerjee/advent-of-code.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rajitbanerjee/advent-of-code/issues"
+  },
+  "homepage": "https://github.com/rajitbanerjee/advent-of-code#readme",
+  "devDependencies": {
+    "@types/node": "^16.11.11"
+  },
+  "dependencies": {}
+}
