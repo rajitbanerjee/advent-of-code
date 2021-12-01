@@ -29,7 +29,7 @@ def getInput(year, day):
             if regex.search(str(d)):
                 folder = d
                 break
-        outpath = folder/Path(f'day{day}.in')
+        outpath = folder/Path(f'day{day:02}.in')
 
         if not outpath.exists():
             url = f'https://adventofcode.com/{year}/day/{day}/input'
