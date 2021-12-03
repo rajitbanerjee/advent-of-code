@@ -2,7 +2,7 @@
 import * as utils from "@utils";
 
 const main = () => {
-  const parseStep = (step: string[]): [string, number] => [step[0], parseInt(step[1], 10)];
+  const parseStep = (step: string[]): [string, number] => [step[0], +step[1]];
   const plan: [string, number][] = utils.splitAllLinesBy("day02.in", " ").map(parseStep);
   console.log(`Part 1: ${followSteps(plan)}`);
   console.log(`Part 2: ${followSteps(plan, true)}`);
