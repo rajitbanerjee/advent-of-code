@@ -7,20 +7,12 @@ export const readAllLines = (inFile: string): string[] => {
     .filter((s) => s.length > 0);
 };
 
-export const readAllLinesAsNumbers = (inFile: string): number[] => {
-  return readAllLines(inFile).map(Number);
-};
+export const readAllLinesAsNumbers = (inFile: string): number[] => readAllLines(inFile).map(Number);
 
-export const splitAllLinesBy = (
-  inFile: string,
-  separator: string
-): string[][] => {
+export const splitAllLinesBy = (inFile: string, separator: string): string[][] => {
   return readAllLines(inFile).map((l) => l.split(separator));
 };
 
-export const splitAllLinesAsNumberBy = (
-  inFile: string,
-  separator: string
-): number[][] => {
+export const splitAllLinesAsNumberBy = (inFile: string, separator: string): number[][] => {
   return readAllLines(inFile).map((l) => l.split(separator).map(Number));
 };
