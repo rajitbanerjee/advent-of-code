@@ -1,3 +1,3 @@
 export * from "./parseInput";
 export * from "./math";
-export * from "./array";
+export * from "./matrix";

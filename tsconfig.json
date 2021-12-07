@@ -6,6 +6,7 @@
     "baseUrl": ".",
     "paths": {
       "@utils": ["utils/ts"]
-    }
+    },
+    "downlevelIteration": true
   }
 }
