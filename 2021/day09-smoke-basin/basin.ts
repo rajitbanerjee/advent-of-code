@@ -1,6 +1,5 @@
 #!/usr/bin/env ts-node
-
-import { sum, splitAllLinesAsNumberBy, prod } from "@utils";
+import { prod, sortNums, splitAllLinesAsNumberBy, sum } from "@utils";
 
 const main = () => {
   const heightmap: number[][] = splitAllLinesAsNumberBy("day09.in", "");
@@ -8,48 +7,46 @@ const main = () => {
   console.log(`Part 2: ${prodThreeLargestBasins(heightmap)}`);
 };
 
+// Part 1
 const sumLowRiskLevels = (heightmap: number[][]): number =>
-  sum(heightmap.map((row, i) => row.map((height, j) => (low(heightmap, i, j) ? height + 1 : 0))).flat(1));
+  sum(heightmap.flatMap((row, i) => row.map((h, j) => (isLowPoint(heightmap, i, j) ? h + 1 : 0))));
 
-const lowPoints: number[][] = [];
-const low = (heightmap: number[][], i: number, j: number): boolean => {
-  const locations = adjacent(heightmap, i, j);
-  const isLow = sum(locations.map((e) => +(heightmap[i][j] < e))) === locations.length;
-  if (isLow) lowPoints.push([i, j]);
+type Point = { i: number; j: number; v?: number };
+const lowPoints: Point[] = [];
+
+const isLowPoint = (heightmap: number[][], i: number, j: number): boolean => {
+  const point = { i, j, v: heightmap[i][j] };
+  const neighbours = getAdjacentPoints(heightmap, point);
+  const isLow = neighbours.filter((n) => point.v < n.v).length === neighbours.length;
+  if (isLow) lowPoints.push(point);
   return isLow;
 };
 
-const adjacent = (heightmap: number[][], i: number, j: number): number[] => {
-  const adjacentIndices = [
-    [i + 1, j],
-    [i - 1, j],
-    [i, j + 1],
-    [i, j - 1],
-  ];
-  return adjacentIndices.map(([a, b]) => (isValid(heightmap, a, b) ? heightmap[a][b] : -1)).filter((e) => e !== -1);
+const getAdjacentPoints = (heightmap: number[][], point: Point): Point[] => {
+  return [
+    { i: point.i + 1, j: point.j },
+    { i: point.i - 1, j: point.j },
+    { i: point.i, j: point.j + 1 },
+    { i: point.i, j: point.j - 1 },
+  ]
+    .filter((p) => isValid(p, heightmap.length, heightmap[0].length))
+    .map((p) => ({ ...p, v: heightmap[p.i][p.j] }));
 };
 
-const isValid = (heightmap: number[][], i: number, j: number): boolean => {
-  const [rows, cols] = [heightmap.length, heightmap[0].length];
-  return 0 <= i && i < rows && 0 <= j && j < cols;
-};
+const isValid = (point: Point, numRows: number, numCols: number): boolean =>
+  0 <= point.i && point.i < numRows && 0 <= point.j && point.j < numCols;
 
+// Part 2
 const prodThreeLargestBasins = (heightmap: number[][]): number => {
-  const basins = lowPoints.map(([i, j]) => basinSize(heightmap, i, j)).sort((a, b) => a - b);
-  return prod(basins.slice(-3));
+  const seen = new Set<string>();
+  return prod(sortNums(lowPoints.map((p) => basinSize(heightmap, p, seen))).slice(-3));
 };
 
-const seen = new Set<string>();
-const basinSize = (heightmap: number[][], i: number, j: number): number => {
-  if (!isValid(heightmap, i, j) || heightmap[i][j] === 9 || seen.has(`${i},${j}`)) return 0;
-  seen.add(`${i},${j}`);
-  const adjacentIndices = [
-    [i + 1, j],
-    [i - 1, j],
-    [i, j + 1],
-    [i, j - 1],
-  ];
-  return 1 + sum(adjacentIndices.map(([a, b]) => basinSize(heightmap, a, b)));
+const basinSize = (heightmap: number[][], point: Point, seen: Set<string>): number => {
+  const key = point.i + "," + point.j;
+  if (point.v === 9 || seen.has(key)) return 0;
+  seen.add(key);
+  return 1 + sum(getAdjacentPoints(heightmap, point).map((p) => basinSize(heightmap, p, seen)));
 };
 
 if (require.main === module) main();
