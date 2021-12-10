@@ -1,5 +1,6 @@
 #!/usr/bin/env ts-node
-import { prod, sortNums, splitAllLinesAsNumberBy, sum } from "@utils";
+import { prod, sortNums, splitAllLinesAsNumberBy } from "@utils";
+import * as _ from "lodash";
 
 const main = () => {
   const heightmap: number[][] = splitAllLinesAsNumberBy("day09.in", "");
@@ -9,15 +10,14 @@ const main = () => {
 
 // Part 1
 const sumLowRiskLevels = (heightmap: number[][]): number =>
-  sum(heightmap.flatMap((row, i) => row.map((h, j) => (isLowPoint(heightmap, i, j) ? h + 1 : 0))));
+  _.sum(heightmap.flatMap((row, i) => row.map((h, j) => (isLowPoint(heightmap, i, j) ? h + 1 : 0))));
 
 type Point = { i: number; j: number; v?: number };
 const lowPoints: Point[] = [];
 
 const isLowPoint = (heightmap: number[][], i: number, j: number): boolean => {
   const point = { i, j, v: heightmap[i][j] };
-  const neighbours = getAdjacentPoints(heightmap, point);
-  const isLow = neighbours.filter((n) => point.v < n.v).length === neighbours.length;
+  const isLow = _.every(getAdjacentPoints(heightmap, point), (p) => point.v < p.v);
   if (isLow) lowPoints.push(point);
   return isLow;
 };
@@ -34,7 +34,7 @@ const getAdjacentPoints = (heightmap: number[][], point: Point): Point[] => {
 };
 
 const isValid = (point: Point, numRows: number, numCols: number): boolean =>
-  0 <= point.i && point.i < numRows && 0 <= point.j && point.j < numCols;
+  _.inRange(point.i, numRows) && _.inRange(point.j, numCols);
 
 // Part 2
 const prodThreeLargestBasins = (heightmap: number[][]): number => {
@@ -46,7 +46,7 @@ const basinSize = (heightmap: number[][], point: Point, seen: Set<string>): numb
   const key = point.i + "," + point.j;
   if (point.v === 9 || seen.has(key)) return 0;
   seen.add(key);
-  return 1 + sum(getAdjacentPoints(heightmap, point).map((p) => basinSize(heightmap, p, seen)));
+  return 1 + _.sumBy(getAdjacentPoints(heightmap, point), (p) => basinSize(heightmap, p, seen));
 };
 
 if (require.main === module) main();

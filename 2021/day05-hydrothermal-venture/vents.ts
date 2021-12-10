@@ -1,12 +1,12 @@
 #!/usr/bin/env ts-node
-import { createNumberMatrix, splitAllLinesBy, sum } from "@utils";
+import { createNumberMatrix, splitAllLinesBy } from "@utils";
+import * as _ from "lodash";
 
 const main = () => {
   const vents: number[][][] = splitAllLinesBy("day05.in", "->").map((line) =>
     line.map((arr) => arr.split(",").map(Number))
   );
-  const vents_copy = JSON.parse(JSON.stringify(vents));
-  console.log(`Part 1: ${getOverlap(vents_copy)}`);
+  console.log(`Part 1: ${getOverlap(_.cloneDeep(vents))}`);
   console.log(`Part 2: ${getOverlap(vents, true)}`);
 };
 
@@ -35,11 +35,7 @@ const drawSegment = (vent: number[][], ocean: number[][], diagonals: boolean) =>
 
   const horizontalOrVertical = x[0] === x[1] || y[0] === y[1];
   if (horizontalOrVertical) {
-    for (let i = x[0]; i <= x[1]; i++) {
-      for (let j = y[0]; j <= y[1]; j++) {
-        ocean[i][j]++;
-      }
-    }
+    _.range(x[0], x[1] + 1).forEach((i) => _.range(y[0], y[1] + 1).forEach((j) => ocean[i][j]++));
   } else if (diagonals) {
     const direction = y[0] < y[1] ? 1 : -1;
     let [i, j] = [x[0], y[0]];
@@ -51,7 +47,7 @@ const drawSegment = (vent: number[][], ocean: number[][], diagonals: boolean) =>
 };
 
 const countOverlappingPoints = (ocean: number[][]): number => {
-  return sum(ocean.map((row) => row.filter((e) => e >= 2).length));
+  return _.sumBy(ocean, (row) => row.filter((e) => e >= 2).length);
 };
 
 if (require.main === module) main();

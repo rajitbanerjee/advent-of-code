@@ -1,5 +1,6 @@
 #!/usr/bin/env ts-node
-import { bin, flipBits, splitAllLinesBy, sum } from "@utils";
+import { bin, flipBits, splitAllLinesBy } from "@utils";
+import * as _ from "lodash"
 
 const main = () => {
   const report: string[][] = splitAllLinesBy("day03.in", "");
@@ -15,7 +16,7 @@ const getPowerConsumption = (report: string[][]): number => {
 };
 
 const getBitAtIndex = (report: string[][], index: number, freqMode = "most"): number => {
-  const bitSum = sum(report.map((line) => +line[index]));
+  const bitSum = _.sumBy(report, (line) => +line[index]);
   const majority = bitSum >= report.length / 2;
   return +(freqMode === "most" ? majority : !majority);
 };

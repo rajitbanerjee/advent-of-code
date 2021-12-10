@@ -1,5 +1,6 @@
 #!/usr/bin/env ts-node
-import { mean, median, splitAllLinesAsNumberBy, sum, triangularNum } from "@utils";
+import { median, splitAllLinesAsNumberBy, triangularNum } from "@utils";
+import * as _ from "lodash";
 
 const main = () => {
   const positions: number[] = splitAllLinesAsNumberBy("day07.in", ",")[0];
@@ -8,15 +9,9 @@ const main = () => {
 };
 
 const minFuelToAlign = (positions: number[], increasingStepCosts?: boolean) => {
-  if (!increasingStepCosts) {
-    const m = median(positions);
-    return sum(positions.map((p) => Math.abs(p - m)));
-  } else {
-    // The mean now becomes the best horizontal position to min. differences
-    const m = Math.floor(mean(positions));
-    // 1, 1+2, 1+2+3, ...
-    return sum(positions.map((p) => triangularNum(Math.abs(p - m))));
-  }
+  const mid = increasingStepCosts ? Math.floor(_.mean(positions)) : median(positions);
+  const func = increasingStepCosts ? triangularNum : _.identity;
+  return _.sumBy(positions, (p) => func(Math.abs(p - mid)));
 };
 
 if (require.main === module) main();

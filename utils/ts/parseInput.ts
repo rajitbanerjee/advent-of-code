@@ -1,8 +1,8 @@
 import { readFileSync } from "fs";
 
-export const readAllLines = (inFile: string): string[] => {
+export const readAllLines = (inFile: string, separator = "\n"): string[] => {
   return readFileSync(inFile, "utf-8")
-    .split("\n")
+    .split(separator)
     .map((s) => s.replace(/\r$/, ""))
     .filter((s) => s.length > 0);
 };
