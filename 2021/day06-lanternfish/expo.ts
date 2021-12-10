@@ -1,6 +1,7 @@
 #!/usr/bin/env ts-node
 
-import { splitAllLinesAsNumberBy, sum } from "@utils";
+import { splitAllLinesAsNumberBy } from "@utils";
+import * as _ from "lodash";
 
 const main = () => {
   const initialState: number[] = splitAllLinesAsNumberBy("day06.in", ",")[0];
@@ -18,7 +19,7 @@ const countLanternfish = (initialState: number[], days: number, rate = 7) => {
     numFish[rate - 1] += fishToDouble; // reset internal timer
     numFish[rate + 1] = fishToDouble; // new fish
   }
-  return sum(numFish);
+  return _.sum(numFish);
 };
 
 if (require.main === module) main();

@@ -1,6 +1,8 @@
 {
   "ts-node": {
-    "require": ["tsconfig-paths/register"]
+    "require": ["tsconfig-paths/register"],
+    "transpileOnly": true,
+    "transpiler": "ts-node/transpilers/swc-experimental"
   },
   "compilerOptions": {
     "baseUrl": ".",
@@ -8,5 +10,6 @@
       "@utils": ["utils/ts"]
     },
     "downlevelIteration": true
-  }
+  },
+  "exclude": ["node_modules"]
 }
