@@ -28,20 +28,18 @@ const performStep = (grid: number[][]): void => {
 };
 
 const flash = (grid: number[][], i: number, j: number): void => {
-  // Flash if energy > 9
   if (grid[i][j] <= 9) return;
   grid[i][j] = 0;
-  // Increase neighbours' energy by 1
-  [i - 1, i, i + 1].forEach((x) => {
-    [j - 1, j, j + 1].forEach((y) => {
-      if (isValid(x, y) && grid[x][y]) {
-        grid[x][y]++;
-        flash(grid, x, y);
-      }
-    });
-  });
+  neighbours(i, j).forEach(([x, y]) => increaseEnergy(grid, x, y));
 };
 
+const increaseEnergy = (grid: number[][], i: number, j: number) => {
+  if (!isValid(i, j) || !grid[i][j]) return;
+  grid[i][j]++;
+  flash(grid, i, j);
+};
+
+const neighbours = (i: number, j: number) => [i - 1, i, i + 1].flatMap((a) => [j - 1, j, j + 1].map((b) => [a, b]));
 const isValid = (i: number, j: number): boolean => _.inRange(i, size) && _.inRange(j, size);
 
 if (require.main === module) main();
