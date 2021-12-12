@@ -1,7 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+from typing import Tuple
+
 
 def readInput() -> list:
-    with open('day2.in') as f:
+    with open('day02.in') as f:
         return list(map(int, f.read().strip().split(',')))
 
 
@@ -26,12 +28,11 @@ def run(program: list) -> list:
 
 
 def nounVerb(target: int) -> int:
-    program = readInput()
-    noun, verb = findInputs(program, target)
+    noun, verb = findInputs(target)
     return 100 * noun + verb
 
 
-def findInputs(program: list, target: int) -> (int, int):
+def findInputs(target: int) -> Tuple[int]:
     left, right = 0, 99
     # binary search for input A
     while left <= right:

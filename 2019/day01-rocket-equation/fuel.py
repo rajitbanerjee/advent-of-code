@@ -20,7 +20,7 @@ def getSum(mass: int) -> int:
 
 
 if __name__ == '__main__':
-    with open('day1.in') as f:
+    with open('day01.in') as f:
         masses = [int(m.strip()) for m in f.readlines()]
 
     print(f"Part 1 = {getTotalFuel(masses)}")
