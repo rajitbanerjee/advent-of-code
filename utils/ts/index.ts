@@ -1,4 +1,5 @@
 export * from "./array";
+export * from "./collections";
 export * from "./math";
 export * from "./matrix";
 export * from "./parseInput";
