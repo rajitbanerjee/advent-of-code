@@ -1,5 +1,5 @@
 #!/usr/bin/env ts-node
-import { createNumberMatrix, splitAllLinesBy } from "@utils";
+import { createMatrix, splitAllLinesBy } from "@utils";
 import * as _ from "lodash";
 
 const main = () => {
@@ -18,7 +18,7 @@ const getOverlap = (vents: number[][][], diagonals = false) => {
 
 const drawAllLines = (vents: number[][][], diagonals: boolean): number[][] => {
   const size = Math.max(...vents.flat(2)) + 1;
-  const ocean: number[][] = createNumberMatrix(size);
+  const ocean: number[][] = createMatrix(size, 0);
   vents.forEach((vent) => drawSegment(vent, ocean, diagonals));
   return ocean;
 };
