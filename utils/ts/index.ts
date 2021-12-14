@@ -6,3 +6,4 @@ export * from "./parseInput";
 export * from "./set";
 export * from "./stats";
 export * from "./string";
+export * from "./types";
