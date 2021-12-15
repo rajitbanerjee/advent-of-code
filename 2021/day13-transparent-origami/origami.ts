@@ -35,7 +35,7 @@ if (require.main === module) {
   const [cString, fString] = readAllLines("day13.in", "\n\n");
   const coords: number[][] = cString.split("\n").map((l) => l.split(",").map(Number));
   const folds: string[][] = fString.split("\n").map((l) => l.replace("fold along ", "").split("="));
-  const paper: string[][] = createMatrix(_.max(_.flatten(coords)) + 1, ".");
+  const paper: string[][] = createMatrix(".", _.max(_.flatten(coords)) + 1);
   coords.forEach(([i, j]) => (paper[j][i] = "#"));
 
   const [a, b] = ["Part 1", "Part 2"];

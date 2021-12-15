@@ -18,7 +18,7 @@ const getOverlap = (vents: number[][][], diagonals = false) => {
 
 const drawAllLines = (vents: number[][][], diagonals: boolean): number[][] => {
   const size = Math.max(...vents.flat(2)) + 1;
-  const ocean: number[][] = createMatrix(size, 0);
+  const ocean: number[][] = createMatrix(0, size);
   vents.forEach((vent) => drawSegment(vent, ocean, diagonals));
   return ocean;
 };

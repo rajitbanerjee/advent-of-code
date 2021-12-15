@@ -22,6 +22,7 @@
     "tsconfig-paths": "^3.12.0"
   },
   "dependencies": {
+    "dijkstrajs": "^1.0.2",
     "lodash": "^4.17.21",
     "regenerator-runtime": "^0.13.9"
   }
