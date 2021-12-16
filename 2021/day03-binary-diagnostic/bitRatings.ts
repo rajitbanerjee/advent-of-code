@@ -1,5 +1,5 @@
 #!/usr/bin/env ts-node
-import { bin, flipBits, splitAllLinesBy } from "@utils";
+import { bin2dec, flipBits, splitAllLinesBy } from "@utils";
 import * as _ from "lodash"
 
 const main = () => {
@@ -10,8 +10,8 @@ const main = () => {
 
 const getPowerConsumption = (report: string[][]): number => {
   const mostFrequent = report[0].map((_, i) => getBitAtIndex(report, i)).join("");
-  const gamma = bin(mostFrequent);
-  const epsilon = bin(flipBits(mostFrequent));
+  const gamma = bin2dec(mostFrequent);
+  const epsilon = bin2dec(flipBits(mostFrequent));
   return gamma * epsilon;
 };
 
@@ -33,7 +33,7 @@ const getRating = (report: string[][], freqMode: string): number => {
     report = report.filter((digits) => +digits[bit] === getBitAtIndex(report, bit, freqMode));
     bit++;
   }
-  return bin(report[0].join(""));
+  return bin2dec(report[0].join(""));
 };
 
 if (require.main === module) main();
