@@ -1,5 +1,5 @@
 #!/usr/bin/env ts-node
-import { readAllLines } from "@utils";
+import { readAllLines, modifyInPlace } from "@utils";
 import * as _ from "lodash";
 
 type NestedArray = Array<NestedElement>;
@@ -14,6 +14,7 @@ const main = () => {
   console.timeLog(b, largestMagnitude(nums));
 };
 
+// Part 1
 const finalSumMagnitude = (nums: NestedArray): number => {
   const assignmentSize = nums.length;
   let result: NestedElement = nums[0];
@@ -21,6 +22,7 @@ const finalSumMagnitude = (nums: NestedArray): number => {
   return magnitude(result);
 };
 
+// Part 2
 const largestMagnitude = (nums: NestedArray): number => {
   const magnitudes: number[] = [];
   nums.forEach((a, i) => {
@@ -40,69 +42,66 @@ let splitComplete = false;
 const add = (a: NestedElement, b: NestedElement): NestedArray => {
   let arr: NestedArray = _.concat([a], [b]);
   while (true) {
-    if (canExplode(arr)) arr = explode(arr);
-    else if (canSplit(arr)) {
-      splitComplete = false;
-      split(arr);
-    } else break;
+    // reduction rules
+    if (canExplode(arr)) explode(arr);
+    else if (canSplit(arr)) split(arr);
+    else break;
+
+    // reset split flag
+    splitComplete = false;
   }
   return arr;
 };
 
 const canExplode = (arr: NestedArray): boolean => getDepth(arr) >= 5;
-
+const canSplit = (arr: NestedArray): boolean => _.flattenDeep(arr).filter((n) => n > 9).length !== 0;
 const getDepth = (arr: any[]) => (Array.isArray(arr) ? 1 + Math.max(...arr.map(getDepth)) : 0);
 
-const explode = (arr: NestedArray): NestedArray => {
-  let explodingPair = null;
-  const identifyExplodingPair = (arr: NestedElement, depth = 4): void => {
-    if (!Array.isArray(arr)) return;
-    for (const [i, val] of arr.entries()) {
-      if (typeof val !== "number" && getDepth(val) === depth) {
-        if (depth === 1 && explodingPair === null) {
-          explodingPair = arr[i];
-          arr[i] = -1;
-          return;
-        }
-        identifyExplodingPair(arr[i], depth - 1);
-      }
-    }
-  };
-  let stringArr = JSON.stringify(arr);
+const explode = (arr: NestedArray, depth = 4): void => {
+  const explodingPair: [number, number] = [-1, -1];
+  identifyExplodingPair(arr, depth, explodingPair);
 
-  identifyExplodingPair(arr);
-
-  stringArr = JSON.stringify(arr);
+  let [stringArr, res] = [JSON.stringify(arr), ""];
   const nums = stringArr.match(/-?\d+/g).map(Number);
+  const explodingIndex = nums.findIndex((n) => n < 0);
 
-  const idx = nums.findIndex((n) => n < 0);
+  // Increase regular numbers to the left and right
+  if (explodingIndex - 1 >= 0) nums[explodingIndex - 1] += explodingPair[0];
+  if (explodingIndex + 1 < nums.length) nums[explodingIndex + 1] += explodingPair[1];
 
-  if (idx - 1 >= 0) nums[idx - 1] += explodingPair[0];
-  if (idx + 1 < nums.length) nums[idx + 1] += explodingPair[1];
-
-  let res = "";
-  _.remove(nums, (n) => n < 0);
-
+  // Reconstruction after updating numbers to left and right of exploding pair
   stringArr = stringArr.replace("-1", "X");
-  for (let i = 0; i < nums.length; i++) {
-    let [start, end] = findNumber(stringArr);
-    res += stringArr.slice(0, start) + nums[i];
-    stringArr = stringArr.slice(end);
-  }
-  res += stringArr;
-  res = res.replace("X", "0");
+  nums
+    .filter((n) => n >= 0)
+    .forEach((n) => {
+      let [start, end] = findNumberIndices(stringArr);
+      res += stringArr.slice(0, start) + n;
+      stringArr = stringArr.slice(end);
+    });
 
-  return JSON.parse(res);
+  modifyInPlace(arr, JSON.parse((res + stringArr).replace("X", "0")));
 };
 
-const findNumber = (s: string): [number, number] => {
+// Store exploding pair and replace it with -1
+const identifyExplodingPair = (arr: NestedElement, depth: number, explodingPair: [number, number]): void => {
+  if (!Array.isArray(arr)) return;
+  for (const [i, val] of arr.entries()) {
+    if (typeof val === "number" || getDepth(val) !== depth) continue;
+    if (depth > 1) identifyExplodingPair(val, depth - 1, explodingPair);
+    if (explodingPair.includes(-1)) {
+      explodingPair[0] = arr[i][0];
+      explodingPair[1] = arr[i][1];
+      arr[i] = -1;
+    }
+  }
+};
+
+const findNumberIndices = (s: string): [number, number] => {
   const start = /\d+/.exec(s).index;
   let end = start;
   while (Number.isInteger(+s[end])) end++;
   return [start, end];
 };
-
-const canSplit = (arr: NestedArray): boolean => _.flattenDeep(arr).filter((n) => n > 9).length !== 0;
 
 const split = (arr: NestedElement): void => {
   if (!Array.isArray(arr)) return;
@@ -110,7 +109,6 @@ const split = (arr: NestedElement): void => {
     if (typeof val === "number" && val > 9 && !splitComplete) {
       arr[i] = [Math.floor(val / 2), Math.ceil(val / 2)];
       splitComplete = true;
-      return;
     } else {
       split(val);
     }
