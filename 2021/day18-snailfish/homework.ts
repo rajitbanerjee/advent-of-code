@@ -1,27 +1,34 @@
 #!/usr/bin/env ts-node
 import { readAllLines } from "@utils";
 import * as _ from "lodash";
-import { type } from "os";
 
-type NestedElement = number | NestedArray;
 type NestedArray = Array<NestedElement>;
+type NestedElement = number | NestedArray;
 
 const main = () => {
   const nums: NestedArray = readAllLines("day18.in", "\n").map((l) => JSON.parse(l));
   const [a, b] = ["Part 1", "Part 2"];
   console.time(a);
   console.timeLog(a, finalSumMagnitude(_.cloneDeep(nums)));
+  console.time(b);
+  console.timeLog(b, largestMagnitude(nums));
 };
 
 const finalSumMagnitude = (nums: NestedArray): number => {
   const assignmentSize = nums.length;
   let result: NestedElement = nums[0];
-  for (let i = 1; i < assignmentSize; i++) {
-    console.log(JSON.stringify(result));
-    result = add(result, nums[i]);
-  }
-  console.log(JSON.stringify(result));
+  for (let i = 1; i < assignmentSize; i++) result = add(result, nums[i]);
   return magnitude(result);
+};
+
+const largestMagnitude = (nums: NestedArray): number => {
+  const magnitudes: number[] = [];
+  nums.forEach((a, i) => {
+    nums.forEach((b, j) => {
+      if (i !== j) magnitudes.push(finalSumMagnitude([_.cloneDeep(a), _.cloneDeep(b)]));
+    });
+  });
+  return _.max(magnitudes);
 };
 
 const magnitude = (sum: NestedElement): number => {
