@@ -2,11 +2,11 @@
 import { bin2dec, readAllLines } from "@utils";
 import * as _ from "lodash";
 
-interface Image {
+type Image = {
   pixels: { [index: string]: Pixel };
   min: number;
   max: number;
-}
+};
 
 enum Pixel {
   DARK,
@@ -17,23 +17,20 @@ const main = () => {
   const [algString, imageString] = readAllLines("day20.in", "\n\n");
   const algorithm: Pixel[] = algString.split("").map(getPixel);
   const image: Image = parseImage(imageString);
-
   const [a, b] = ["Part 1", "Part 2"];
+
   console.time(a);
   console.timeLog(a, countLitPixels(_.cloneDeep(image), algorithm, 2));
   console.time(b);
   console.timeLog(b, countLitPixels(image, algorithm, 50));
 };
 
-const getPixel = (p: string): Pixel => (+(p === "#") ? Pixel.LIGHT : Pixel.DARK);
+const getPixel = (p: string): Pixel => (Number(p === "#") ? Pixel.LIGHT : Pixel.DARK);
 
 const parseImage = (imageString: string): Image => {
-  const image: Image = { pixels: {}, min: 0, max: 0 };
   const matrix: Pixel[][] = imageString.split("\n").map((l) => l.split("").map(getPixel));
-
+  const image: Image = { pixels: {}, min: 0, max: matrix.length };
   matrix.forEach((row, i) => row.forEach((c, j) => (image.pixels[str(i, j)] = c)));
-  image.min = 0;
-  image.max = matrix.length;
   return image;
 };
 
@@ -49,20 +46,16 @@ const countLitPixels = (image: Image, algorithm: Pixel[], times: number): number
 };
 
 const enhance = (image: Image, algorithm: Pixel[], border: Pixel): void => {
-  const enhancedImage: Image = { pixels: {}, min: image.min - 1, max: image.max + 1 };
-  _.range(image.min - 1, image.max + 1).forEach((i) => {
-    _.range(image.min - 1, image.max + 1).forEach((j) => {
-      const index = bin2dec(neighbours(i, j, image, border));
-      enhancedImage.pixels[str(i, j)] = algorithm[index];
-    });
-  });
-  ["pixels", "min", "max"].forEach((k) => (image[k] = enhancedImage[k]));
+  const enhanced: Image = { pixels: {}, min: image.min - 1, max: image.max + 1 };
+  const r: number[] = _.range(image.min - 1, image.max + 1);
+  r.forEach((i) => r.forEach((j) => (enhanced.pixels[str(i, j)] = algorithm[neighbours(i, j, image, border)])));
+  ["pixels", "min", "max"].forEach((k) => (image[k] = enhanced[k]));
 };
 
-const neighbours = (i: number, j: number, image: Image, border: Pixel): string => {
-  const d = [-1, 0, 1];
-  const res = d.flatMap((x) => d.map((y) => +(image.pixels[str(i + x, j + y)] ?? border)));
-  return res.join("");
+const neighbours = (i: number, j: number, image: Image, border: Pixel): number => {
+  const d = [-1, 0, +1];
+  const res = d.flatMap((x) => d.map((y) => Number(image.pixels[str(i + x, j + y)] ?? border)));
+  return bin2dec(res.join(""));
 };
 
 if (require.main === module) main();
