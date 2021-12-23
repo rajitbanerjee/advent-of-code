@@ -2,6 +2,7 @@
 import { vectorSum } from "@utils";
 
 /*
+Part 1
 #############
 #...........#
 ###D#A#C#D###
@@ -82,5 +83,107 @@ vectorSum(steps, [0, 3 + 5, 0, 0]);
 */
 vectorSum(steps, [3 + 8, 0, 0, 0]);
 
-const energy = steps[0] + steps[1] * 10 + steps[2] * 100 + steps[3] * 1000;
-console.log("Part 1:", energy);
+const energy = (s: number[]) => s[0] + s[1] * 10 + s[2] * 100 + s[3] * 1000;
+console.log("Part 1:", energy(steps));
+
+/*
+Part 2
+#############
+#...........#
+###D#A#C#D###
+  #D#C#B#A#
+  #D#B#A#C#
+  #B#C#B#A#
+  #########
+*/
+steps = [0, 0, 0, 0];
+
+/*
+#############
+#AA.......CD#
+###D#A#C#.###
+  #D#C#B#.#
+  #D#B#A#.#
+  #B#C#B#.#
+  #########
+*/
+vectorSum(steps, [10 + 11, 0, 4, 3]);
+
+/*
+#############
+#AA.......CD#
+###.#A#C#.###
+  #.#C#B#D#
+  #.#B#A#D#
+  #B#C#B#D#
+  #########
+*/
+vectorSum(steps, [0, 0, 0, 11 + 11 + 11]);
+
+/*
+#############
+#AA.....B.CD#
+###.#A#C#.###
+  #.#C#B#D#
+  #.#B#A#D#
+  #.#C#B#D#
+  #########
+*/
+vectorSum(steps, [0, 9, 0, 0]);
+
+/*
+#############
+#.......B.CD#
+###.#.#C#.###
+  #A#C#B#D#
+  #A#B#A#D#
+  #A#C#B#D#
+  #########
+*/
+vectorSum(steps, [5 + 5 + 5, 0, 0, 0]);
+
+/*
+#############
+#CC.B...B.CD#
+###.#.#C#.###
+  #A#.#B#D#
+  #A#.#A#D#
+  #A#.#B#D#
+  #########
+*/
+vectorSum(steps, [0, 4, 6 + 7, 0]);
+
+/*
+#############
+#CC.......CD#
+###.#.#C#.###
+  #A#.#B#D#
+  #A#B#A#D#
+  #A#B#B#D#
+  #########
+*/
+vectorSum(steps, [0, 5 + 6, 0, 0]);
+
+/*
+#############
+#CC.....C.CD#
+###A#B#.#.###
+  #A#B#.#D#
+  #A#B#.#D#
+  #A#B#.#D#
+  #########
+*/
+vectorSum(steps, [8, 6 + 7, 2, 0]);
+
+/*
+#############
+#...........#
+###A#B#C#D###
+  #A#B#C#D#
+  #A#B#C#D#
+  #A#B#C#D#
+  #########
+*/
+vectorSum(steps, [0, 0, 5 + 6 + 7 + 7, 3]);
+
+console.log("Part 2:", energy(steps));
