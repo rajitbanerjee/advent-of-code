@@ -1,6 +1,8 @@
 # [Advent of Code](https://adventofcode.com) 
 
 ```
+[2023] 2*
+[2022] 0*
 [2021] 47*
 [2020] 50*
 [2019]  7*

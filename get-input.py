@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Usage
 -----
@@ -7,7 +7,6 @@ Usage
 2. Run `$ ./get-input 2020` to download all input so far for given year.
 3. Alternatively, run script without arguments `$ ./get-input` to download \
 the current year's input by default.
-
 """
 
 from datetime import datetime
@@ -18,9 +17,8 @@ import sys
 
 import requests
 
-# remember to store session cookie as environment var before running script
+# remember to store session cookie in .env before running script
 SESSION_COOKIE = os.environ['AOC_COOKIE']
-
 
 def getInput(year, day):
     try:
