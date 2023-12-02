@@ -1,7 +1,7 @@
 # [Advent of Code](https://adventofcode.com) 
 
 ```
-[2023] 2*
+[2023] 4*
 [2022] 0*
 [2021] 47*
 [2020] 50*
@@ -10,8 +10,6 @@
 [2017]  4*
 [2016]  2*
 [2015]  2*
-
-Total stars: 122*
 ```
 
 _Note to self_:
