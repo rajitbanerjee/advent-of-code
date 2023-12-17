@@ -1,0 +1,9 @@
+{
+    "arrowParens": "always",
+    "endOfLine": "lf",
+    "printWidth": 150,
+    "singleAttributePerLine": true,
+    "singleQuote": false,
+    "tabWidth": 4,
+    "trailingComma": "es5"
+}

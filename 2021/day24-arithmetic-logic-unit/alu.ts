@@ -32,36 +32,36 @@ z = (z//a) * (25 * x + 1) + (w + C) * x
 const NUM_DIGITS = 14;
 
 const main = () => {
-  // Divide the list of instructions into NUM_DIGITS chunks, then extract the variables A, B, C
-  const variables: number[][] = chunks(readAllLines("day24.in").join("\n"), NUM_DIGITS).map((chunk) => {
-    return [chunk[4], chunk[5], chunk[15]].map((s) => +s.split(" ")[2]);
-  });
+    // Divide the list of instructions into NUM_DIGITS chunks, then extract the variables A, B, C
+    const variables: number[][] = chunks(readAllLines("day24.in").join("\n"), NUM_DIGITS).map((chunk) => {
+        return [chunk[4], chunk[5], chunk[15]].map((s) => +s.split(" ")[2]);
+    });
 
-  const [a, b] = ["Part 1", "Part 2"];
-  console.time(a);
-  console.timeLog(a, findModelNumber(variables, "largest"));
-  console.time(b);
-  console.timeLog(b, findModelNumber(variables, "smallest"));
+    const [a, b] = ["Part 1", "Part 2"];
+    console.time(a);
+    console.timeLog(a, findModelNumber(variables, "largest"));
+    console.time(b);
+    console.timeLog(b, findModelNumber(variables, "smallest"));
 };
 
 const findModelNumber = (variables: number[][], accept: "largest" | "smallest"): string => {
-  const options = accept === "largest" ? _.range(9, 0, -1) : _.range(1, 10);
-  return search(new Set<string>(), variables, 0, 0, options);
+    const options = accept === "largest" ? _.range(9, 0, -1) : _.range(1, 10);
+    return search(new Set<string>(), variables, 0, 0, options);
 };
 
 const search = (seen: Set<string>, variables: number[][], i: number, z: number, options: number[]): string => {
-  if (i === variables.length) return z === 0 ? undefined : "";
-  if (seen.has(str(z, i))) return "";
+    if (i === variables.length) return z === 0 ? undefined : "";
+    if (seen.has(str(z, i))) return "";
 
-  const [A, B, C] = variables[i];
-  for (const w of options) {
-    const x = +((z % 26) + B !== w);
-    const new_z = Math.floor(z / A) * (25 * x + 1) + (w + C) * x;
-    const remainingDigits = search(seen, variables, i + 1, new_z, options);
-    if (remainingDigits !== "") return [w, remainingDigits ?? ""].join("");
-  }
-  seen.add(str(z, i));
-  return "";
+    const [A, B, C] = variables[i];
+    for (const w of options) {
+        const x = +((z % 26) + B !== w);
+        const new_z = Math.floor(z / A) * (25 * x + 1) + (w + C) * x;
+        const remainingDigits = search(seen, variables, i + 1, new_z, options);
+        if (remainingDigits !== "") return [w, remainingDigits ?? ""].join("");
+    }
+    seen.add(str(z, i));
+    return "";
 };
 
 const str = (...nums: number[]) => nums.join(",");
